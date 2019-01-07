@@ -1,0 +1,298 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package laundry;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Mbahmo
+ */
+public class datahistory extends javax.swing.JDialog {
+private DefaultTableModel model;
+    /**
+     * Creates new form datahistory
+     */
+    public datahistory(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        model = new  DefaultTableModel();
+        
+        jTable1.setModel(model);
+        model.addColumn("No Transaksi");
+        model.addColumn("Tanggal Ambil");
+        model.addColumn("Nama Pelanggan");
+        model.addColumn("Cucian");
+        model.addColumn("Jumlah");
+        model.addColumn("Username");
+        model.addColumn("Total Bayar");
+        tampilhistory();
+    }
+    
+   void table(){
+            DefaultTableModel tabelTampil1 = new DefaultTableModel();
+        tabelTampil1.addColumn("No Transaksi");
+        tabelTampil1.addColumn("Tanggal Ambil");
+        tabelTampil1.addColumn("Nama Pelanggan");
+        tabelTampil1.addColumn("Cucian");
+        tabelTampil1.addColumn("Jumlah");
+        tabelTampil1.addColumn("Username");
+        tabelTampil1.addColumn("Total Bayar");
+        try{
+             Statement statement=(Statement)
+                    koneksi.getConnection().createStatement();
+            String sql = "SELECT\n" +
+"  `tbpengambilan`.*, `tbpenerimaan`.*, `tbpelanggan`.*, `tbuser`.*, `tbbarang`.*\n" +
+"FROM\n" +
+"  `tbpengambilan` INNER JOIN\n" +
+"  `tbpenerimaan` ON `tbpenerimaan`.`NoTransaksi` = `tbpengambilan`.`NoTransaksi`\n" +
+"  INNER JOIN\n" +
+"  `tbpelanggan` ON `tbpenerimaan`.`IdPelanggan` = `tbpelanggan`.`IdPelanggan`\n" +
+"  INNER JOIN\n" +
+"  `tbuser` ON `tbuser`.`IdUser` = `tbpenerimaan`.`IdUser` INNER JOIN\n" +
+"  `tbbarang` ON `tbbarang`.`IdBarang` = `tbpenerimaan`.`IdBarang` WHERE " 
+                 +   "tbpengambilan.NoTransaksi like '%" + jTextField1.getText() + "%'"
+                 +   "or NamaPelanggan like '%" + jTextField1.getText() + "%'"
+                    +   "or NamaBarang like '%" + jTextField1.getText() + "%'"
+                    +   "or Jumlah like '%" + jTextField1.getText() + "%'"
+                    +   "or Username like '%" + jTextField1.getText() + "%'"
+                    +   "or TotalBayar like '%" + jTextField1.getText() + "%'";
+//            System.out.println(sql);
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+            tabelTampil1.addRow(new Object[]{
+            rs.getString("NoTransaksi"),
+            rs.getString("TglAmbil"),
+            rs.getString("NamaPelanggan"),
+            rs.getString("NamaBarang"),
+            rs.getString("Jumlah"),
+            rs.getString("Username"),
+            rs.getString("TotalBayar"),
+            });
+            }
+          jTable1.setModel(tabelTampil1);
+
+                }
+        catch (Exception e){
+       System.out.println(e);
+                    
+            }
+   }
+    void tampilhistory()
+    {
+    model.getDataVector().removeAllElements();
+    
+    model.fireTableDataChanged();
+        try {
+            Statement statement=(Statement)
+                    koneksi.getConnection().createStatement();
+         String sql="SELECT\n" +
+"  `tbpengambilan`.*, `tbpenerimaan`.*, `tbpelanggan`.*, `tbuser`.*, `tbbarang`.*\n" +
+"FROM\n" +
+"  `tbpengambilan` INNER JOIN\n" +
+"  `tbpenerimaan` ON `tbpenerimaan`.`NoTransaksi` = `tbpengambilan`.`NoTransaksi`\n" +
+"  INNER JOIN\n" +
+"  `tbpelanggan` ON `tbpenerimaan`.`IdPelanggan` = `tbpelanggan`.`IdPelanggan`\n" +
+"  INNER JOIN\n" +
+"  `tbuser` ON `tbuser`.`IdUser` = `tbpenerimaan`.`IdUser` INNER JOIN\n" +
+"  `tbbarang` ON `tbbarang`.`IdBarang` = `tbpenerimaan`.`IdBarang`;";
+            ResultSet r = statement.executeQuery(sql);
+                    
+            while (r.next())
+            {
+                Object[] o=new Object[7];
+                o[0]=r.getString("NoTransaksi");
+                o[1]=r.getString("TglAmbil");
+                o[2]=r.getString("NamaPelanggan");
+                o[3]=r.getString("NamaBarang");
+                o[4]=r.getString("Jumlah") +" "+ r.getString("Satuan");
+                o[5]=r.getString("Username");
+                o[6]=r.getString("TotalBayar");
+                model.addRow(o);
+            }
+           r.close();
+           statement.close();
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Data History");
+
+        jPanel1.setBackground(new java.awt.Color(0, 204, 204));
+
+        jTable1.setFont(new java.awt.Font("SansSerif", 0, 11)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jTextField1.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Search");
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
+        jLabel1.setText("DATA HISTORY");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(273, 273, 273)
+                .addComponent(jLabel1)
+                .addContainerGap(288, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jLabel1))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        // TODO add your handling code here:
+        table();
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(datahistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(datahistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(datahistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(datahistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                datahistory dialog = new datahistory(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    // End of variables declaration//GEN-END:variables
+}
